@@ -1,6 +1,6 @@
-package com.learning.restfulwebservices.dao;
+package com.learning.restfulwebservices.user.dao;
 
-import com.learning.restfulwebservices.model.User;
+import com.learning.restfulwebservices.user.model.User;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

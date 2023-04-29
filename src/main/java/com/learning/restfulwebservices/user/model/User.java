@@ -1,4 +1,4 @@
-package com.learning.restfulwebservices.model;
+package com.learning.restfulwebservices.user.model;
 
 import lombok.*;
 
