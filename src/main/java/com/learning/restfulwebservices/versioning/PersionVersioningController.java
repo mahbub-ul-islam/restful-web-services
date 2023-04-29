@@ -16,4 +16,14 @@ public class PersionVersioningController {
     public PersonV2 personV2() {
         return new PersonV2(new Name("Bob", "Charlie"));
     }
+
+    @GetMapping(value = "/person/param", params = "version=1")
+    public PersonV1 paramsV1() {
+        return new PersonV1("Bob Charlie");
+    }
+
+    @GetMapping(value = "/person/param", params = "version=2")
+    public PersonV2 paramsV2() {
+        return new PersonV2(new Name("Bob", "Charlie"));
+    }
 }
