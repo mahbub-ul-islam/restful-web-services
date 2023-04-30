@@ -1,5 +1,7 @@
 package com.learning.restfulwebservices.user.controller;
 
+import com.learning.restfulwebservices.Post.model.Post;
+import com.learning.restfulwebservices.Post.repository.PostRepository;
 import com.learning.restfulwebservices.exceptions.UserNotFoundException;
 import com.learning.restfulwebservices.user.dao.UserDaoService;
 import com.learning.restfulwebservices.user.model.User;
@@ -24,10 +26,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class UserJPAController {
 
     @Autowired
-     private UserDaoService service;
-
-    @Autowired
     private UserRepository repository;
+    @Autowired
+    private PostRepository postRepository;
 
     @GetMapping("/users")
     public List<User> retrieveAllJpa() {
@@ -68,5 +69,37 @@ public class UserJPAController {
     @DeleteMapping("/users/{userId}")
     public void deleteUserJpa(@PathVariable int userId) {
         repository.deleteById(userId);
+    }
+
+    @GetMapping("/users/{id}/posts")
+    public List<Post> retrieveAllPostJpa(@PathVariable int id) {
+        Optional<User> user = repository.findById(id);
+
+        if (user.isEmpty()) {
+            throw new UserNotFoundException("Id: " + id + " not found.");
+        }
+
+        return user.get().getPosts();
+    }
+
+    @PostMapping("/users/{userId}/post")
+    public ResponseEntity<Object> createPostJpa(@PathVariable int userId, @Valid @RequestBody Post post) {
+        Optional<User> userOptional = repository.findById(userId);
+
+        if (userOptional.isEmpty()) {
+            throw new UserNotFoundException("Id: " + userId + " not found.");
+        }
+
+        User user = userOptional.get();
+        post.setUser(user);
+        postRepository.save(post);
+
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(post.getId())
+                .toUri();
+
+        return ResponseEntity.created(uri).build();
     }
 }

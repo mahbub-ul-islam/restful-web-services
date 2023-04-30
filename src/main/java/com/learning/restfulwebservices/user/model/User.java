@@ -1,12 +1,14 @@
 package com.learning.restfulwebservices.user.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.learning.restfulwebservices.Post.model.Post;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -27,4 +29,7 @@ public class User {
     @JsonIgnore
     @Past(message = "Birthdate Should be in past.")
     private Date birthDate;
+
+    @OneToMany(mappedBy = "user")
+    private List<Post> posts;
 }
